@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1f2933;
+  background: #f4f7fb;
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.site-header {
+  background: #003b5c;
+  color: white;
+  padding: 28px 0;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.site-header p {
+  margin: 4px 0 18px;
+  color: #dbeafe;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+.hero {
+  background: white;
+  padding: 70px 0;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.hero h2 {
+  font-size: 2.6rem;
+  margin-bottom: 16px;
+  color: #003b5c;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 28px;
+}
+
+.button {
+  display: inline-block;
+  background: #f26522;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.button:hover {
+  background: #d9541d;
+}
+
+.grid-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 44px 0;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
+}
+
+.card h3 {
+  color: #003b5c;
+  margin-top: 0;
+}
+
+footer {
+  background: #1f2933;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+
+.page-title {
+  background: white;
+  padding: 40px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.list {
+  padding: 40px 0;
+}
+
+.list-item {
+  background: white;
+  padding: 20px;
+  border-left: 5px solid #003b5c;
+  margin-bottom: 18px;
+  border-radius: 6px;
+}
+
+.search-box {
+  background: white;
+  padding: 24px;
+  margin: 30px 0;
+  border-radius: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+@media (max-width: 800px) {
+  .grid-section {
+    grid-template-columns: 1fr;
+  }
+
+  nav a {
+    display: block;
+    margin: 8px 0;
+  }
+
+  .hero h2 {
+    font-size: 2rem;
+  }
+}
