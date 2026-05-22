@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Catalog Search | H. Kelly University</title>
+  <title>Catalog | H. Kelly University</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -10,7 +10,7 @@
 <header class="site-header">
   <div class="container">
     <h1>H. Kelly University</h1>
-    <p>Catalog Search</p>
+    <p>Catalog-powered demo site</p>
 
     <nav>
       <a href="index.html">Home</a>
@@ -22,57 +22,27 @@
 </header>
 
 <main>
-  <section class="container list">
-  <div class="list-item">
-    <h3>Custom Catalog Page</h3>
-
-    <p id="statusMessage">
-      Loading active Undergraduate catalog...
-    </p>
-
-    <p>
-      <a id="customPageLink" href="#" target="_blank" rel="noopener">
-        Open custom catalog page
-      </a>
-    </p>
-  </div>
-</section>
-  
   <section class="page-title">
     <div class="container">
-      <h2>Catalog Search</h2>
+      <h2>Undergraduate Catalog Page</h2>
       <p>
-        This page is ready for a future Modern Campus Catalog API integration.
+        This page automatically finds the active Undergraduate catalog before building the link.
       </p>
     </div>
   </section>
 
-  <section class="container">
-
-    <div class="search-box">
-      <label for="catalogSearch"><strong>Search catalog content</strong></label>
-      <br><br>
-      <input
-        id="catalogSearch"
-        type="text"
-        placeholder="Try searching for business, computer science, marketing..."
-      />
-    </div>
+  <section class="container list">
 
     <div class="list-item">
-      <h3>Future API Integration Area</h3>
-      <p>
-        Later, this section can display live results from Modern Campus Catalog Web Services,
-        including courses, programs, pages, and hierarchy items.
+      <h3>Custom Catalog Page</h3>
+
+      <p id="statusMessage">
+        Loading active Undergraduate catalog...
       </p>
-    </div>
 
-    <div class="list-item">
-      <h3>Gateway Link</h3>
       <p>
-        View the official catalog gateway:
-        <a href="http://hkellydemo.catalog.acalog.com/" target="_blank">
-          hkellydemo.catalog.acalog.com
+        <a id="customPageLink" href="#" target="_blank" rel="noopener">
+          Open custom catalog page
         </a>
       </p>
     </div>
@@ -83,6 +53,8 @@
 <footer>
   <p>&copy; 2026 H. Kelly University. Demo site for Modern Campus Catalog API testing.</p>
 </footer>
+
+<script src="catalog-api.js"></script>
 
 </body>
 </html>
