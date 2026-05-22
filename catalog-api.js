@@ -2,7 +2,7 @@ const GATEWAY_URL = "http://hkellydemo.catalog.acalog.com";
 const CATALOG_TYPE = "Undergraduate";
 
 // Change this to the exact title of your custom page in Catalog.
-const CUSTOM_PAGE_TITLE = "Academic Policies";
+const CUSTOM_PAGE_TITLE = "Administrative Procedures";
 
 async function callCatalogProxy(params) {
   const queryString = new URLSearchParams(params).toString();
