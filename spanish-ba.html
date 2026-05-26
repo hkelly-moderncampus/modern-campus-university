@@ -1,70 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Spanish, B.A. | H. Kelly University</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-
-<header class="site-header">
-  <div class="container">
-    <h1>H. Kelly University</h1>
-    <p>Spanish, B.A.</p>
-
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="programs.html">Programs</a>
-      <a href="courses.html">Courses</a>
-      <a href="catalog.html">Catalog Search</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-  <section class="page-title">
-    <div class="container">
-      <p><a href="programs.html">← Back to Programs</a></p>
-      <h2>Spanish, B.A.</h2>
-      <p>
-        The Spanish, B.A. program prepares students to develop advanced
-        language, cultural, and communication skills.
-      </p>
-    </div>
-  </section>
-
-  <section class="container">
-    <h2>Program Details</h2>
-
-    <div class="tabs">
-      <button id="degree-tab" class="active-tab" onclick="showProgramTab('degree')">
-        Degree Requirements
-      </button>
-
-      <button id="admissions-tab" onclick="showProgramTab('admissions')">
-        Admission Requirements
-      </button>
-    </div>
-
-    <div id="degree" class="tab-panel">
-      <h3>Degree Requirements</h3>
-      <div id="degree-content">Loading degree requirements...</div>
-    </div>
-
-    <div id="admissions" class="tab-panel" style="display:none;">
-      <h3>Admission Requirements</h3>
-      <div id="admissions-content">Loading admission requirements...</div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <p>
-    &copy; 2026 H. Kelly University.
-    Demo site for Modern Campus Catalog API testing.
-  </p>
-</footer>
-
 <script>
 function showProgramTab(tab) {
   document.getElementById("degree").style.display = "none";
@@ -77,26 +10,34 @@ function showProgramTab(tab) {
   document.getElementById(tab + "-tab").classList.add("active-tab");
 }
 
-function formatProgramHtml(htmlString) {
+function formatProgramXml(xmlString) {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, "text/html");
+  const xml = parser.parseFromString(xmlString, "text/xml");
 
-  doc.querySelectorAll("script, style, link, iframe, header, footer, nav, noscript").forEach(function(el) {
-    el.remove();
-  });
+  const cores = Array.from(xml.getElementsByTagName("core"));
 
-  const content =
-    doc.querySelector("#acalog-content") ||
-    doc.querySelector("#content") ||
-    doc.querySelector(".custom_leftpad_20") ||
-    doc.querySelector(".page_content") ||
-    doc.querySelector("body");
-
-  if (!content) {
-    return "<p>No program content found.</p>";
+  if (!cores.length) {
+    return "<p>No requirements are currently listed.</p>";
   }
 
-  return content.innerHTML;
+  let html = "";
+
+  cores.forEach((core) => {
+    const title =
+      core.getElementsByTagName("a:title")[0]?.textContent || "";
+
+    const content =
+      core.getElementsByTagName("a:content")[0]?.textContent || "";
+
+    html += `
+      <div class="requirement-card">
+        <h4>${title}</h4>
+        <p>${content || "No additional content listed."}</p>
+      </div>
+    `;
+  });
+
+  return html;
 }
 
 async function loadSpanishProgram() {
@@ -105,29 +46,22 @@ async function loadSpanishProgram() {
       "https://hkelly-moderncampus.netlify.app/.netlify/functions/spanish-program"
     );
 
-    if (!response.ok) {
-      throw new Error("Netlify function returned " + response.status);
-    }
-
     const data = await response.json();
 
     document.getElementById("degree-content").innerHTML =
-      formatProgramHtml(data.degree);
+      formatProgramXml(data.degree);
 
     document.getElementById("admissions-content").innerHTML =
-      formatProgramHtml(data.admissions);
+      formatProgramXml(data.admissions);
 
   } catch (error) {
     document.getElementById("degree-content").innerHTML =
-      "<p><strong>Unable to load degree requirements.</strong></p><p>" + error.message + "</p>";
+      "<p>Unable to load degree requirements.</p>";
 
     document.getElementById("admissions-content").innerHTML =
-      "<p><strong>Unable to load admission requirements.</strong></p><p>" + error.message + "</p>";
+      "<p>Unable to load admissions requirements.</p>";
   }
 }
 
 loadSpanishProgram();
 </script>
-
-</body>
-</html>
