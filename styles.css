@@ -251,3 +251,36 @@ a:hover {
     font-size: 2rem;
   }
 }
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  max-width: 330px;
+  margin: 30px 0;
+}
+
+.tabs button {
+  background: #08365c;
+  color: #ffffff;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  padding: 18px 22px;
+  text-align: left;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tabs button:hover {
+  background: #0b4f83;
+}
+
+.tabs button.active-tab {
+  background: #0b4f83;
+}
+
+.tab-panel {
+  border-top: 3px solid #8dc63f;
+  padding-top: 30px;
+  margin-top: 30px;
+}
