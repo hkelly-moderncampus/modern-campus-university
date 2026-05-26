@@ -175,26 +175,31 @@ a:hover {
 }
 
 .tabs button {
-  background: #08365c;
-  color: white;
-  border: none;
+  background: #ffffff;
+  color: #08365c;
+  border: 2px solid #08365c;
   padding: 16px 28px;
   font-size: 1.15rem;
   font-weight: 700;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
+/* Hover state */
+
 .tabs button:hover {
-  background: #0b4f83;
+  background: #eaf2f8;
   transform: translateY(-2px);
 }
 
+/* Active selected tab */
+
 .tabs button.active-tab {
-  background: #8dc63f;
-  color: #08365c;
+  background: #08365c;
+  color: #ffffff;
+  border-left: 8px solid #8dc63f;
 }
 
 /* TAB CONTENT */
