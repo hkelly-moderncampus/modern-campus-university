@@ -3,69 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spanish, B.A. | Modern Campus University</title>
+  <title>Spanish, B.A. | H. Kelly University</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <main class="program-page">
-    <p><a href="programs.html">← Back to Programs</a></p>
+<header class="site-header">
+  <div class="container">
+    <h1>H. Kelly University</h1>
+    <p>Spanish, B.A.</p>
 
-    <h1>Spanish, B.A.</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="programs.html">Programs</a>
+      <a href="courses.html">Courses</a>
+      <a href="catalog.html">Catalog Search</a>
+    </nav>
+  </div>
+</header>
 
-    <section>
-      <h2>Program Content</h2>
+<main>
+  <section class="page-title">
+    <div class="container">
+      <p><a href="programs.html">← Back to Programs</a></p>
+      <h2>Spanish, B.A.</h2>
       <p>
         The Spanish, B.A. program prepares students to develop advanced language,
         cultural, and communication skills for careers in education, translation,
-        public service, business, and graduate study.
+        business, public service, and graduate study.
       </p>
-    </section>
+    </div>
+  </section>
 
-    <section>
-      <h2>Program Details</h2>
+  <section class="container">
+    <h2>Program Details</h2>
 
-      <div class="tabs">
-        <button type="button" onclick="showProgramTab('degree')">
-          Degree Requirements
-        </button>
-        <button type="button" onclick="showProgramTab('admissions')">
-          Admissions Requirements
-        </button>
+    <div class="tabs">
+      <button type="button" onclick="showProgramTab('degree')">
+        Degree Requirements
+      </button>
+
+      <button type="button" onclick="showProgramTab('admissions')">
+        Admissions Requirements
+      </button>
+    </div>
+
+    <div id="degree" class="tab-panel">
+      <h3>Degree Requirements</h3>
+      <div id="degree-content">
+        Loading degree requirements...
       </div>
+    </div>
 
-      <div id="degree" class="tab-panel">
-        <h3>Degree Requirements</h3>
-        <pre id="degree-content">Loading degree requirements...</pre>
+    <div id="admissions" class="tab-panel" style="display:none;">
+      <h3>Admissions Requirements</h3>
+      <div id="admissions-content">
+        Loading admissions requirements...
       </div>
+    </div>
+  </section>
+</main>
 
-      <div id="admissions" class="tab-panel" style="display:none;">
-        <h3>Admissions Requirements</h3>
-        <pre id="admissions-content">Loading admissions requirements...</pre>
-      </div>
-    </section>
-  </main>
+<footer>
+  <p>&copy; 2026 H. Kelly University. Demo site for Modern Campus Catalog API testing.</p>
+</footer>
 
-  <script>
-    async function loadSpanishProgram() {
-      const response = await fetch(
-        "https://hkelly-moderncampus.netlify.app/.netlify/functions/spanish-program"
-      );
+<script>
+  async function loadSpanishProgram() {
+    const response = await fetch(
+      "https://hkelly-moderncampus.netlify.app/.netlify/functions/spanish-program"
+    );
 
-      const data = await response.json();
+    const data = await response.json();
 
-      document.getElementById("degree-content").textContent = data.degree;
-      document.getElementById("admissions-content").textContent = data.admissions;
-    }
+    document.getElementById("degree-content").innerHTML =
+      `<pre>${escapeHtml(data.degree)}</pre>`;
 
-    function showProgramTab(tab) {
-      document.getElementById("degree").style.display = "none";
-      document.getElementById("admissions").style.display = "none";
-      document.getElementById(tab).style.display = "block";
-    }
+    document.getElementById("admissions-content").innerHTML =
+      `<pre>${escapeHtml(data.admissions)}</pre>`;
+  }
 
-    loadSpanishProgram();
-  </script>
+  function showProgramTab(tab) {
+    document.getElementById("degree").style.display = "none";
+    document.getElementById("admissions").style.display = "none";
+
+    document.getElementById(tab).style.display = "block";
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  loadSpanishProgram();
+</script>
 
 </body>
 </html>
