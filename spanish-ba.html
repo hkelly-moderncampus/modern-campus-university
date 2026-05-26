@@ -130,16 +130,17 @@ function htmlFromAcalogContent(contentNode) {
 }
 
 function renderCourseList(core) {
-  const coursesWrapper = firstChildByName(core, "courses");
-  if (!coursesWrapper) return "";
+  const courses = Array.from(core.getElementsByTagName("*")).filter(function(el) {
+    return el.localName === "course";
+  });
 
-  const courses = childrenByName(coursesWrapper, "course");
   if (!courses.length) return "";
 
   let html = "<ul class='course-list'>";
 
   courses.forEach(function(course) {
     const title = textFromFirst(course, "title");
+
     if (title) {
       html += "<li>" + title + "</li>";
     }
@@ -155,8 +156,16 @@ function renderCore(core, level) {
   const contentHtml = htmlFromAcalogContent(content);
   const coursesHtml = renderCourseList(core);
 
-  const subcoresWrapper = firstChildByName(core, "cores");
-  const subcores = subcoresWrapper ? childrenByName(subcoresWrapper, "core") : [];
+  const childCores = Array.from(core.children).filter(function(child) {
+    return child.localName === "core";
+  });
+
+  const nestedCoresWrapper = firstChildByName(core, "cores");
+  const nestedCores = nestedCoresWrapper
+    ? childrenByName(nestedCoresWrapper, "core")
+    : [];
+
+  const allSubcores = childCores.concat(nestedCores);
 
   let html = "<div class='requirement-card core-level-" + level + "'>";
 
@@ -172,7 +181,7 @@ function renderCore(core, level) {
     html += coursesHtml;
   }
 
-  subcores.forEach(function(subcore) {
+  allSubcores.forEach(function(subcore) {
     html += renderCore(subcore, level + 1);
   });
 
