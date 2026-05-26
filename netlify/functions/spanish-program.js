@@ -1,3 +1,25 @@
+const https = require("https");
+
+function getUrl(url) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (res) => {
+        let data = "";
+
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+
+        res.on("end", () => {
+          resolve(data);
+        });
+      })
+      .on("error", (error) => {
+        reject(error);
+      });
+  });
+}
+
 exports.handler = async () => {
   const API_KEY = process.env.ACALOG_API_KEY;
 
@@ -8,11 +30,8 @@ exports.handler = async () => {
     `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
 
   try {
-    const admissionsRes = await fetch(admissionsUrl);
-    const degreeRes = await fetch(degreeUrl);
-
-    const admissionsXml = await admissionsRes.text();
-    const degreeXml = await degreeRes.text();
+    const admissionsXml = await getUrl(admissionsUrl);
+    const degreeXml = await getUrl(degreeUrl);
 
     return {
       statusCode: 200,
@@ -28,6 +47,9 @@ exports.handler = async () => {
   } catch (error) {
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         message: error.message
       })
