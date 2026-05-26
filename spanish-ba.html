@@ -32,8 +32,15 @@
   <section class="container">
     <h2>Program Details</h2>
 
-    <button onclick="showProgramTab('degree')">Degree Requirements</button>
-    <button onclick="showProgramTab('admissions')">Admissions Requirements</button>
+<div class="tabs">
+  <button id="degree-tab" class="active-tab" onclick="showProgramTab('degree')">
+    Degree Requirements
+  </button>
+
+  <button id="admissions-tab" onclick="showProgramTab('admissions')">
+    Admission Requirements
+  </button>
+</div>
 
     <div id="degree" class="tab-panel">
       <h3>Degree Requirements</h3>
