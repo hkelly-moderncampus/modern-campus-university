@@ -85,18 +85,23 @@ function formatProgramHtml(htmlString) {
     el.remove();
   });
 
-  const content =
-    doc.querySelector("#acalog-content") ||
-    doc.querySelector("#content") ||
-    doc.querySelector(".custom_leftpad_20") ||
-    doc.querySelector(".page_content") ||
-    doc.querySelector("body");
+  const possibleContent = Array.from(doc.querySelectorAll("td, div, section, main"));
 
-  if (!content) {
-    return "<p>No program content found.</p>";
+  const bestMatch = possibleContent.find(function(el) {
+    const text = el.innerText || el.textContent || "";
+    return (
+      text.includes("Required courses") ||
+      text.includes("Secondary Teacher Certification") ||
+      text.includes("Specialization in Bilingual") ||
+      text.includes("Admissions Requirements")
+    );
+  });
+
+  if (!bestMatch) {
+    return "<p>No detailed program content found.</p>";
   }
 
-  return content.innerHTML;
+  return bestMatch.innerHTML;
 }
 
 async function loadSpanishProgram() {
