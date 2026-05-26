@@ -8,10 +8,8 @@ exports.handler = async () => {
     `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
 
   try {
-    const [admissionsRes, degreeRes] = await Promise.all([
-      fetch(admissionsUrl),
-      fetch(degreeUrl)
-    ]);
+    const admissionsRes = await fetch(admissionsUrl);
+    const degreeRes = await fetch(degreeUrl);
 
     const admissionsXml = await admissionsRes.text();
     const degreeXml = await degreeRes.text();
@@ -30,11 +28,8 @@ exports.handler = async () => {
   } catch (error) {
     return {
       statusCode: 500,
-      headers: {
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify({
-        error: error.message
+        message: error.message
       })
     };
   }
