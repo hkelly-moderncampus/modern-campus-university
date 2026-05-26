@@ -1,73 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spanish, B.A. | H. Kelly University</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-
-<header class="site-header">
-  <div class="container">
-    <h1>H. Kelly University</h1>
-    <p>Spanish, B.A.</p>
-
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="programs.html">Programs</a>
-      <a href="courses.html">Courses</a>
-      <a href="catalog.html">Catalog Search</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-  <section class="page-title">
-    <div class="container">
-      <p><a href="programs.html">← Back to Programs</a></p>
-      <h2>Spanish, B.A.</h2>
-      <p>
-        The Spanish, B.A. program prepares students to develop advanced language,
-        cultural, and communication skills for careers in education, translation,
-        business, public service, and graduate study.
-      </p>
-    </div>
-  </section>
-
-  <section class="container">
-    <h2>Program Details</h2>
-
-    <div class="tabs">
-      <button type="button" onclick="showProgramTab('degree')">
-        Degree Requirements
-      </button>
-
-      <button type="button" onclick="showProgramTab('admissions')">
-        Admissions Requirements
-      </button>
-    </div>
-
-    <div id="degree" class="tab-panel">
-      <h3>Degree Requirements</h3>
-      <div id="degree-content">
-        Loading degree requirements...
-      </div>
-    </div>
-
-    <div id="admissions" class="tab-panel" style="display:none;">
-      <h3>Admissions Requirements</h3>
-      <div id="admissions-content">
-        Loading admissions requirements...
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <p>&copy; 2026 H. Kelly University. Demo site for Modern Campus Catalog API testing.</p>
-</footer>
-
 <script>
   async function loadSpanishProgram() {
     const response = await fetch(
@@ -77,30 +7,51 @@
     const data = await response.json();
 
     document.getElementById("degree-content").innerHTML =
-      `<pre>${escapeHtml(data.degree)}</pre>`;
+      formatProgramXml(data.degree, "degree");
 
     document.getElementById("admissions-content").innerHTML =
-      `<pre>${escapeHtml(data.admissions)}</pre>`;
+      formatProgramXml(data.admissions, "admissions");
+  }
+
+  function formatProgramXml(xmlString, type) {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlString, "text/xml");
+
+    const title = xml.querySelector("title")?.textContent || "";
+    const content = xml.querySelector("content")?.textContent || "";
+
+    const cores = Array.from(xml.querySelectorAll("core"));
+
+    let html = "";
+
+    if (content.trim()) {
+      html += `<div class="program-copy">${content}</div>`;
+    }
+
+    cores.forEach(core => {
+      const coreTitle = core.querySelector("title")?.textContent || "";
+      const coreContent = core.querySelector("content")?.textContent || "";
+
+      html += `
+        <div class="requirement-card">
+          <h4>${coreTitle}</h4>
+          <div>${coreContent || "<p>No additional content listed.</p>"}</div>
+        </div>
+      `;
+    });
+
+    if (!html) {
+      html = "<p>No requirements are currently listed.</p>";
+    }
+
+    return html;
   }
 
   function showProgramTab(tab) {
     document.getElementById("degree").style.display = "none";
     document.getElementById("admissions").style.display = "none";
-
     document.getElementById(tab).style.display = "block";
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
   }
 
   loadSpanishProgram();
 </script>
-
-</body>
-</html>
