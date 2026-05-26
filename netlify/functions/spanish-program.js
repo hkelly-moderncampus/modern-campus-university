@@ -22,11 +22,11 @@ exports.handler = async () => {
   const API_KEY = process.env.ACALOG_API_KEY;
 
   const admissionsUrl =
-    `https://catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=16583&options%5Bfull%5D=1`;
+  `https://hkellydemo.catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=16583&options%5Bfull%5D=1`;
 
-  const degreeUrl =
-    `https://catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
-
+const degreeUrl =
+  `https://hkellydemo.catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
+  
   try {
     const admissionsXml = await getUrl(admissionsUrl);
     const degreeXml = await getUrl(degreeUrl);
