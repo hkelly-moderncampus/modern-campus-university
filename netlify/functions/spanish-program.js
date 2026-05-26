@@ -1,9 +1,13 @@
 const https = require("https");
 
+const agent = new https.Agent({
+  rejectUnauthorized: false
+});
+
 function getUrl(url) {
   return new Promise((resolve, reject) => {
     https
-      .get(url, (res) => {
+      .get(url, { agent }, (res) => {
         let data = "";
 
         res.on("data", (chunk) => {
@@ -19,15 +23,17 @@ function getUrl(url) {
 }
 
 exports.handler = async () => {
-  const degreeUrl =
-    "https://hkellydemo.catalog.acalog.com/preview_program.php?catoid=64&poid=15711&returnto=4759";
+  const API_KEY = process.env.ACALOG_API_KEY;
 
   const admissionsUrl =
-    "https://hkellydemo.catalog.acalog.com/preview_program.php?catoid=64&poid=16583&returnto=4759";
+    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&organization=1&catalog=64&method=getItems&type=programs&ids%5B%5D=16583&options%5Bfull%5D=1`;
+
+  const degreeUrl =
+    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&organization=1&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
 
   try {
-    const degreeHtml = await getUrl(degreeUrl);
-    const admissionsHtml = await getUrl(admissionsUrl);
+    const admissionsXml = await getUrl(admissionsUrl);
+    const degreeXml = await getUrl(degreeUrl);
 
     return {
       statusCode: 200,
@@ -36,8 +42,8 @@ exports.handler = async () => {
         "Access-Control-Allow-Origin": "*"
       },
       body: JSON.stringify({
-        degree: degreeHtml,
-        admissions: admissionsHtml
+        admissions: admissionsXml,
+        degree: degreeXml
       })
     };
   } catch (error) {
