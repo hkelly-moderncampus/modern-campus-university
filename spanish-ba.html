@@ -6,11 +6,11 @@
 
     const data = await response.json();
 
-    document.getElementById("degree-content").innerHTML =
-      formatProgramXml(data.degree, "degree");
+    document.getElementById("degree-content").textContent =
+  "Degree requirements loaded from the API.";
 
-    document.getElementById("admissions-content").innerHTML =
-      formatProgramXml(data.admissions, "admissions");
+document.getElementById("admissions-content").textContent =
+  "Admissions requirements loaded from the API.";
   }
 
   function formatProgramXml(xmlString, type) {
