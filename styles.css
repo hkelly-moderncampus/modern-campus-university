@@ -251,34 +251,3 @@ a:hover {
     font-size: 2rem;
   }
 }
-
-.program-copy {
-  background: #ffffff;
-  padding: 20px;
-  border-left: 4px solid #003366;
-  margin-bottom: 20px;
-  line-height: 1.6;
-}
-
-.requirement-card {
-  background: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 18px;
-}
-
-.requirement-card h4 {
-  margin-top: 0;
-  color: #003366;
-}
-
-.tab-panel {
-  background: #ffffff;
-}
-
-pre {
-  background: transparent;
-  border: none;
-  padding: 0;
-}
