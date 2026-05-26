@@ -169,6 +169,7 @@ a:hover {
 
 .tabs {
   display: flex;
+  flex-direction: row;
   gap: 14px;
   margin: 30px 0;
   flex-wrap: wrap;
@@ -183,15 +184,24 @@ a:hover {
   font-weight: 700;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: none;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-/* Hover state */
+/* NO hover color change */
 
 .tabs button:hover {
-  background: #eaf2f8;
-  transform: translateY(-2px);
+  background: #ffffff;
+  color: #08365c;
+  transform: none;
+}
+
+/* Selected tab */
+
+.tabs button.active-tab {
+  background: #08365c;
+  color: #ffffff;
+  border-left: 8px solid #8dc63f;
 }
 
 /* Active selected tab */
