@@ -14,9 +14,7 @@ function getUrl(url) {
           resolve(data);
         });
       })
-      .on("error", (error) => {
-        reject(error);
-      });
+      .on("error", reject);
   });
 }
 
@@ -24,10 +22,10 @@ exports.handler = async () => {
   const API_KEY = process.env.ACALOG_API_KEY;
 
   const admissionsUrl =
-    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=16583&options%5Bfull%5D=1`;
+    `https://catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=16583&options%5Bfull%5D=1`;
 
   const degreeUrl =
-    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
+    `https://catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
 
   try {
     const admissionsXml = await getUrl(admissionsUrl);
