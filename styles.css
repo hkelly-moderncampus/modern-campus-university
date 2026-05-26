@@ -197,7 +197,7 @@ a:hover {
 /* Active selected tab */
 
 .tabs button.active-tab {
-  background: #08365c;
+  background: #eaf2f8;
   color: #ffffff;
   border-left: 8px solid #8dc63f;
 }
