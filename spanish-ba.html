@@ -81,29 +81,20 @@ function formatProgramHtml(htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, "text/html");
 
-  /* Remove scripts/styles */
-
-  doc.querySelectorAll(
-    "script, style, link, iframe, header, footer, nav"
-  ).forEach(el => el.remove());
-
-  /* THIS is the actual catalog program body */
+  doc.querySelectorAll("script, style, link, iframe, header, footer, nav, noscript").forEach(function(el) {
+    el.remove();
+  });
 
   const content =
-    doc.querySelector(".custom_leftpad_20") ||
     doc.querySelector("#acalog-content") ||
-    doc.querySelector(".sc_sccoursedescs") ||
-    doc.querySelector(".courseblock") ||
-    doc.querySelector("#program_content");
+    doc.querySelector("#content") ||
+    doc.querySelector(".custom_leftpad_20") ||
+    doc.querySelector(".page_content") ||
+    doc.querySelector("body");
 
   if (!content) {
     return "<p>No program content found.</p>";
   }
-
-  return content.innerHTML;
-}
-
-  content.querySelectorAll("script, style, link, iframe, header, footer, nav").forEach(el => el.remove());
 
   return content.innerHTML;
 }
@@ -113,6 +104,10 @@ async function loadSpanishProgram() {
     const response = await fetch(
       "https://hkelly-moderncampus.netlify.app/.netlify/functions/spanish-program"
     );
+
+    if (!response.ok) {
+      throw new Error("Netlify function returned " + response.status);
+    }
 
     const data = await response.json();
 
@@ -124,10 +119,10 @@ async function loadSpanishProgram() {
 
   } catch (error) {
     document.getElementById("degree-content").innerHTML =
-      "<p>Unable to load degree requirements.</p>";
+      "<p><strong>Unable to load degree requirements.</strong></p><p>" + error.message + "</p>";
 
     document.getElementById("admissions-content").innerHTML =
-      "<p>Unable to load admission requirements.</p>";
+      "<p><strong>Unable to load admission requirements.</strong></p><p>" + error.message + "</p>";
   }
 }
 
