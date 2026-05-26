@@ -1,63 +1,29 @@
-exports.handler = async function(event) {
-  const apiKey = process.env.ACALOG_API_KEY;
+exports.handler = async () => {
+  const API_KEY = process.env.ACALOG_API_KEY;
 
-  if (!apiKey) {
-    return {
-      statusCode: 500,
-      body: "Missing ACALOG_API_KEY environment variable."
-    };
-  }
+  const admissionsUrl =
+    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids[]=16583&options[full]=1`;
 
-  const params = event.queryStringParameters || {};
-  const endpoint = params.endpoint;
+  const degreeUrl =
+    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids[]=15711&options[full]=1`;
 
-  let apiUrl;
+  const [admissionsRes, degreeRes] = await Promise.all([
+    fetch(admissionsUrl),
+    fetch(degreeUrl)
+  ]);
 
-  if (endpoint === "getCatalogs") {
-    apiUrl =
-      `https://apis.acalog.com/v1/content?format=xml&method=getCatalogs&key=${encodeURIComponent(apiKey)}`;
-  }
+  const admissionsXml = await admissionsRes.text();
+  const degreeXml = await degreeRes.text();
 
-  else if (endpoint === "searchPages") {
-    if (!params.catalog || !params.query) {
-      return {
-        statusCode: 400,
-        body: "Missing catalog or query parameter."
-      };
-    }
-
-    apiUrl =
-      `https://apis.acalog.com/v1/search/pages` +
-      `?format=xml` +
-      `&method=search` +
-      `&key=${encodeURIComponent(apiKey)}` +
-      `&catalog=${encodeURIComponent(params.catalog)}` +
-      `&query=${encodeURIComponent(params.query)}`;
-  }
-
-  else {
-    return {
-      statusCode: 400,
-      body: "Invalid endpoint."
-    };
-  }
-
-  try {
-    const response = await fetch(apiUrl);
-    const xml = await response.text();
-
-    return {
-      statusCode: response.status,
-      headers: {
-        "Content-Type": "application/xml",
-        "Cache-Control": "public, max-age=600"
-      },
-      body: xml
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: `Catalog API request failed: ${error.message}`
-    };
-  }
+  return {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    },
+    body: JSON.stringify({
+      admissions: admissionsXml,
+      degree: degreeXml
+    })
+  };
 };
