@@ -284,3 +284,18 @@ a:hover {
   padding-top: 30px;
   margin-top: 30px;
 }
+.tabs button {
+  background: #08365c;
+  color: white;
+}
+
+.tabs button.active-tab {
+  background: #ffffff;
+  color: #08365c;
+  border-left: 6px solid #8dc63f;
+}
+
+.tabs button:hover {
+  background: #ffffff;
+  color: #08365c;
+}
