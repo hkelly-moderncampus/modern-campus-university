@@ -22,13 +22,10 @@
 </header>
 
 <main>
-
   <section class="page-title">
     <div class="container">
       <p><a href="programs.html">← Back to Programs</a></p>
-
       <h2>Spanish, B.A.</h2>
-
       <p>
         The Spanish, B.A. program prepares students to develop advanced
         language, cultural, and communication skills.
@@ -37,55 +34,28 @@
   </section>
 
   <section class="container">
-
     <h2>Program Details</h2>
 
     <div class="tabs">
-
-      <button
-        id="degree-tab"
-        class="active-tab"
-        onclick="showProgramTab('degree')">
-
+      <button id="degree-tab" class="active-tab" onclick="showProgramTab('degree')">
         Degree Requirements
-
       </button>
 
-      <button
-        id="admissions-tab"
-        onclick="showProgramTab('admissions')">
-
+      <button id="admissions-tab" onclick="showProgramTab('admissions')">
         Admission Requirements
-
       </button>
-
     </div>
 
     <div id="degree" class="tab-panel">
-
       <h3>Degree Requirements</h3>
-
-      <div id="degree-content">
-        Loading degree requirements...
-      </div>
-
+      <div id="degree-content">Loading degree requirements...</div>
     </div>
 
-    <div
-      id="admissions"
-      class="tab-panel"
-      style="display:none;">
-
+    <div id="admissions" class="tab-panel" style="display:none;">
       <h3>Admission Requirements</h3>
-
-      <div id="admissions-content">
-        Loading admission requirements...
-      </div>
-
+      <div id="admissions-content">Loading admission requirements...</div>
     </div>
-
   </section>
-
 </main>
 
 <footer>
@@ -96,68 +66,150 @@
 </footer>
 
 <script>
-
 function showProgramTab(tab) {
-
   document.getElementById("degree").style.display = "none";
   document.getElementById("admissions").style.display = "none";
 
-  document
-    .getElementById("degree-tab")
-    .classList.remove("active-tab");
-
-  document
-    .getElementById("admissions-tab")
-    .classList.remove("active-tab");
+  document.getElementById("degree-tab").classList.remove("active-tab");
+  document.getElementById("admissions-tab").classList.remove("active-tab");
 
   document.getElementById(tab).style.display = "block";
-
-  document
-    .getElementById(tab + "-tab")
-    .classList.add("active-tab");
+  document.getElementById(tab + "-tab").classList.add("active-tab");
 }
 
-function formatProgramXml(xmlString) {
+function getChildrenByLocalName(parent, localName) {
+  return Array.from(parent.children).filter(
+    child => child.localName === localName
+  );
+}
 
-  const parser = new DOMParser();
+function getFirstChildText(parent, localName) {
+  const child = getChildrenByLocalName(parent, localName)[0];
+  return child ? child.textContent.trim() : "";
+}
 
-  const xml =
-    parser.parseFromString(xmlString, "text/xml");
-
-  const cores =
-    Array.from(xml.getElementsByTagName("core"));
-
-  if (!cores.length) {
-    return "<p>No requirements are currently listed.</p>";
-  }
+function serializeHtmlContent(node) {
+  if (!node) return "";
 
   let html = "";
 
-  cores.forEach((core) => {
+  Array.from(node.childNodes).forEach(child => {
+    if (child.nodeType === Node.TEXT_NODE) {
+      html += child.textContent;
+    } else if (child.nodeType === Node.ELEMENT_NODE) {
+      const tag = child.localName;
 
-    const title =
-      core.getElementsByTagName("a:title")[0]
-      ?.textContent || "";
-
-    const content =
-      core.getElementsByTagName("a:content")[0]
-      ?.textContent || "";
-
-    html += `
-      <div class="requirement-card">
-        <h4>${title}</h4>
-        <p>${content || "No additional content listed."}</p>
-      </div>
-    `;
+      if (tag === "p") {
+        html += `<p>${child.textContent.trim()}</p>`;
+      } else if (tag === "ul") {
+        html += "<ul>";
+        Array.from(child.children).forEach(li => {
+          html += `<li>${li.textContent.trim()}</li>`;
+        });
+        html += "</ul>";
+      } else if (tag === "ol") {
+        html += "<ol>";
+        Array.from(child.children).forEach(li => {
+          html += `<li>${li.textContent.trim()}</li>`;
+        });
+        html += "</ol>";
+      } else if (tag === "permalink") {
+        const title = getFirstChildText(child, "title");
+        html += `<span>${title}</span>`;
+      } else {
+        html += child.textContent.trim();
+      }
+    }
   });
 
   return html;
 }
 
+function formatCourses(core) {
+  const coursesWrapper = getChildrenByLocalName(core, "courses")[0];
+  if (!coursesWrapper) return "";
+
+  const courses = getChildrenByLocalName(coursesWrapper, "course");
+  if (!courses.length) return "";
+
+  let html = "<ul class='course-list'>";
+
+  courses.forEach(course => {
+    const title = getFirstChildText(course, "title");
+    if (title) {
+      html += `<li>${title}</li>`;
+    }
+  });
+
+  html += "</ul>";
+  return html;
+}
+
+function formatCore(core, level = 0) {
+  const title = getFirstChildText(core, "title");
+
+  const directContent = getChildrenByLocalName(core, "content")[0];
+  const contentHtml = serializeHtmlContent(directContent);
+
+  const coursesHtml = formatCourses(core);
+
+  const childCores = getChildrenByLocalName(core, "core");
+
+  let html = `
+    <div class="requirement-card level-${level}">
+      ${title ? `<h4>${title}</h4>` : ""}
+      ${contentHtml || ""}
+      ${coursesHtml || ""}
+  `;
+
+  childCores.forEach(childCore => {
+    html += formatCore(childCore, level + 1);
+  });
+
+  html += "</div>";
+
+  return html;
+}
+
+function formatProgramXml(xmlString) {
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlString, "text/xml");
+
+  const program = getChildrenByLocalName(
+    getChildrenByLocalName(xml.documentElement, "programs")[0],
+    "program"
+  )[0];
+
+  if (!program) {
+    return "<p>No program content found.</p>";
+  }
+
+  let html = "";
+
+  const programContent = getChildrenByLocalName(program, "content")[0];
+  const programContentHtml = serializeHtmlContent(programContent);
+
+  if (programContentHtml) {
+    html += `<div class="program-intro">${programContentHtml}</div>`;
+  }
+
+  const coresWrapper = getChildrenByLocalName(program, "cores")[0];
+
+  if (!coresWrapper) {
+    return html || "<p>No requirements are currently listed.</p>";
+  }
+
+  const cores = getChildrenByLocalName(coresWrapper, "core");
+
+  cores.forEach(core => {
+    html += formatCore(core, 0);
+  });
+
+  return html || "<p>No requirements are currently listed.</p>";
+}
+
 async function loadSpanishProgram() {
-
   try {
-
     const response = await fetch(
       "https://hkelly-moderncampus.netlify.app/.netlify/functions/spanish-program"
     );
@@ -171,7 +223,6 @@ async function loadSpanishProgram() {
       formatProgramXml(data.admissions);
 
   } catch (error) {
-
     document.getElementById("degree-content").innerHTML =
       "<p>Unable to load degree requirements.</p>";
 
@@ -181,7 +232,6 @@ async function loadSpanishProgram() {
 }
 
 loadSpanishProgram();
-
 </script>
 
 </body>
