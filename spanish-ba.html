@@ -62,7 +62,12 @@
 function showProgramTab(tab) {
   document.getElementById("degree").style.display = "none";
   document.getElementById("admissions").style.display = "none";
+
+  document.getElementById("degree-tab").classList.remove("active-tab");
+  document.getElementById("admissions-tab").classList.remove("active-tab");
+
   document.getElementById(tab).style.display = "block";
+  document.getElementById(tab + "-tab").classList.add("active-tab");
 }
 
 async function loadSpanishProgram() {
