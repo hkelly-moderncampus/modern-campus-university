@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spanish, B.A. | Modern Campus University</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <main class="program-page">
+    <p><a href="programs.html">← Back to Programs</a></p>
+
+    <h1>Spanish, B.A.</h1>
+
+    <section>
+      <h2>Program Content</h2>
+      <p>
+        The Spanish, B.A. program prepares students to develop advanced language,
+        cultural, and communication skills for careers in education, translation,
+        public service, business, and graduate study.
+      </p>
+    </section>
+
+    <section>
+      <h2>Program Details</h2>
+
+      <div class="tabs">
+        <button type="button" onclick="showProgramTab('degree')">
+          Degree Requirements
+        </button>
+        <button type="button" onclick="showProgramTab('admissions')">
+          Admissions Requirements
+        </button>
+      </div>
+
+      <div id="degree" class="tab-panel">
+        <h3>Degree Requirements</h3>
+        <pre id="degree-content">Loading degree requirements...</pre>
+      </div>
+
+      <div id="admissions" class="tab-panel" style="display:none;">
+        <h3>Admissions Requirements</h3>
+        <pre id="admissions-content">Loading admissions requirements...</pre>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    async function loadSpanishProgram() {
+      const response = await fetch(
+        "https://hkelly-moderncampus.netlify.app/.netlify/functions/spanish-program"
+      );
+
+      const data = await response.json();
+
+      document.getElementById("degree-content").textContent = data.degree;
+      document.getElementById("admissions-content").textContent = data.admissions;
+    }
+
+    function showProgramTab(tab) {
+      document.getElementById("degree").style.display = "none";
+      document.getElementById("admissions").style.display = "none";
+      document.getElementById(tab).style.display = "block";
+    }
+
+    loadSpanishProgram();
+  </script>
+
+</body>
+</html>
