@@ -81,16 +81,27 @@ function formatProgramHtml(htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, "text/html");
 
+  /* Remove scripts/styles */
+
+  doc.querySelectorAll(
+    "script, style, link, iframe, header, footer, nav"
+  ).forEach(el => el.remove());
+
+  /* THIS is the actual catalog program body */
+
   const content =
-    doc.querySelector("#program_content") ||
-    doc.querySelector(".program") ||
-    doc.querySelector(".preview_program") ||
-    doc.querySelector("#content") ||
-    doc.body;
+    doc.querySelector(".custom_leftpad_20") ||
+    doc.querySelector("#acalog-content") ||
+    doc.querySelector(".sc_sccoursedescs") ||
+    doc.querySelector(".courseblock") ||
+    doc.querySelector("#program_content");
 
   if (!content) {
     return "<p>No program content found.</p>";
   }
+
+  return content.innerHTML;
+}
 
   content.querySelectorAll("script, style, link, iframe, header, footer, nav").forEach(el => el.remove());
 
