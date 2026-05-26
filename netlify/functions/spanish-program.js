@@ -1,9 +1,13 @@
 const https = require("https");
 
+const agent = new https.Agent({
+  rejectUnauthorized: false
+});
+
 function getUrl(url) {
   return new Promise((resolve, reject) => {
     https
-      .get(url, (res) => {
+      .get(url, { agent }, (res) => {
         let data = "";
 
         res.on("data", (chunk) => {
@@ -22,11 +26,11 @@ exports.handler = async () => {
   const API_KEY = process.env.ACALOG_API_KEY;
 
   const admissionsUrl =
-  `https://hkellydemo.catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=16583&options%5Bfull%5D=1`;
+    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&organization=1&catalog=64&method=getItems&type=programs&ids%5B%5D=16583&options%5Bfull%5D=1`;
 
-const degreeUrl =
-  `https://hkellydemo.catalog.acalog.com/v1/content?format=xml&key=${API_KEY}&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
-  
+  const degreeUrl =
+    `https://apis.acalog.com/v1/content?format=xml&key=${API_KEY}&organization=1&catalog=64&method=getItems&type=programs&ids%5B%5D=15711&options%5Bfull%5D=1`;
+
   try {
     const admissionsXml = await getUrl(admissionsUrl);
     const degreeXml = await getUrl(degreeUrl);
